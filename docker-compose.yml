@@ -1,0 +1,44 @@
+version: "3"
+services:
+  backend:
+    build: ./backend/
+    volumes:
+      - ./backend:/myapp
+    ports:
+      - 5001:5000
+    links:
+      - db
+    tty: true
+    command: flask run --host=0.0.0.0
+
+  db:
+    platform: linux/amd64
+    build: ./db/
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: flask
+      MYSQL_USER: flask
+      MYSQL_PASSWORD: flask
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db/sql:/docker-entrypoint-initdb.d
+      - ./db/log:/var/log/mysql
+    ports:
+      - 3307:3307
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+    command: sh -c "cd app && npm start"
+    ports:
+      - "3000:3000"
+
+volumes:
+  db:
+    driver: local
