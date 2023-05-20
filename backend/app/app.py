@@ -9,5 +9,5 @@ def index():
     prompt = request.args.get("prompt", "hello")
     gptj = gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy", "./app/models")
     generate_text = gptj.generate(prompt)
-    return {"prompt": "prompt", "answer": generate_text}
+    return {"prompt": prompt, "answer": generate_text}
     
