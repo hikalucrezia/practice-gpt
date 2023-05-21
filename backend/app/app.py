@@ -1,4 +1,4 @@
-from flask import Flask, request, abort, make_response, jsonify
+from flask import Flask, request, abort, make_response, jsonify, g
 import gpt4all
 from flask_cors import CORS
 
@@ -15,8 +15,9 @@ def after_request(response):
 @app.route("/", methods=['GET'])
 def index():
     prompt = request.args.get("prompt", "hello")
-    gptj = gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy", "./app/models")
-    generate_text = gptj.generate(prompt)
+    if 'gptj' not in g:
+      g.gptj = gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy", "./app/models")
+    generate_text = g.gptj.generate(prompt)
     result = {"prompt": prompt, "answer": generate_text}
     return make_response(jsonify(result))
     
