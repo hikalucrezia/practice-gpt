@@ -1,7 +1,7 @@
 # Getting Started
 ```
 docker-compose run --rm backend sh -c "cd app && pip install -r requirements.txt"
-docker-compose run --rm backend sh -c "cd app && npm install"
+docker-compose run --rm frontend sh -c "cd app && npm install"
 docker compose build
 docker compose up -d
 ```
